@@ -7,8 +7,8 @@ class SpellChecker {
         long start = 0, end = 0;
         String wordfile, textfile;
         //Hashtable<String, String> table;
-        CollisionChainTable table;
-
+        //CollisionChainTable table;
+        LinearProbeTable table;
         /* Shared token to store for every word in the hash table. */
         String placeholder = "a";
 
@@ -23,7 +23,7 @@ class SpellChecker {
         //table = new Hashtable<String, String>(hash_size);
         
         Compressable function = new Division(hash_size);
-        table = new CollisionChainTable(hash_size, function);
+        table = new LinearProbeTable(hash_size, function);
         
         /* Read wordfile, and insert every word into the hash table. */
         try {
@@ -69,7 +69,7 @@ class SpellChecker {
 
         System.out.printf("Hash table contains %d words\n", table.wordCount);
         System.out.printf("Hash table load factor %f\n",
-               (double)table.size()/hash_size);
+               (double)table.getWordCount()/hash_size);
 
         System.out.printf("Text contains %d words\n", count);
         System.out.printf("typo's %d\n", typo);
