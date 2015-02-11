@@ -1,6 +1,8 @@
 import java.util.*;
 import java.io.*;
 class SpellChecker {
+	
+	
     public static void main(String[] args) {
         int hash_size;
         int count = 0, typo = 0;
