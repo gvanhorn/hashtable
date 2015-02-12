@@ -25,6 +25,11 @@ public class Division implements Compressable {
         return h;
     }
 
+	@Override
+	public void updateHashSize(int size) {
+		table_length = size;
+	}
+
 
 
 }

@@ -4,12 +4,12 @@ class SpellChecker {
 	
 	
     public static void main(String[] args) {
-        int hash_size;
+        int init_hash_size;
         int count = 0, typo = 0;
         long start = 0, end = 0;
         String wordfile, textfile;
         //Hashtable<String, String> table;
-        //CollisionChainTable table;
+//        CollisionChainTable table;
         LinearProbeTable table;
         /* Shared token to store for every word in the hash table. */
         String placeholder = "a";
@@ -20,12 +20,12 @@ class SpellChecker {
         }
         wordfile = args[0];
         textfile = args[1];
-        hash_size = Integer.parseInt(args[2]);
-        System.out.printf("Selected table size: %d\n", hash_size);
+        init_hash_size = Integer.parseInt(args[2]);
+        System.out.printf("Selected table size: %d\n", init_hash_size);
         //table = new Hashtable<String, String>(hash_size);
         
-        Compressable function = new Division(hash_size);
-        table = new LinearProbeTable(hash_size, function);
+        Compressable function = new Division(init_hash_size);
+        table = new LinearProbeTable(init_hash_size, function);
         
         /* Read wordfile, and insert every word into the hash table. */
         try {
@@ -71,14 +71,14 @@ class SpellChecker {
 
         System.out.printf("Hash table contains %d words\n", table.wordCount);
         System.out.printf("Hash table load factor %f\n",
-               (double)table.getWordCount()/hash_size);
+               (double)table.getWordCount()/table.getHashSize());
 
         System.out.printf("Text contains %d words\n", count);
         System.out.printf("typo's %d\n", typo);
 
         System.out.println("zoeken woorden in " + (end - start) + " ms");
     }
-    /* Checks is word contains digits. So it can be ignored for spell
+    /* Checks if word contains digits. So it can be ignored for spell
      * checking. */
     static boolean contains_numbers(String str) {
         for (int i = 0 ; i < str.length() ; i++) 
@@ -87,4 +87,28 @@ class SpellChecker {
 
         return false;
     }
+    
+//    public Compressable makeCompressable(String compressType, int hashSize){
+//    	Compressable function;
+//    	
+//    	switch(compressType){
+//    		case "Division":
+//    			function = new Division(hashSize);
+//    			break;
+//    		default:
+//    			System.out.println("Unkown compression type");
+//    	}
+//    	
+//    	return function;
+//    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

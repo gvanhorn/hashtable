@@ -11,11 +11,11 @@ public class LinearProbeTable {
 		function = hashFunction;
 		wordCount = 0;
 		table = new Entry[size];
-		threshold = 0.75;
+		threshold = 0.5;
 	}
 	
 	public void put(String key, String value){
-		if(wordCount++ / size > threshold){
+		if((wordCount++ / size ) > threshold){
 			resize();
 		}
 		
@@ -23,16 +23,17 @@ public class LinearProbeTable {
 		Entry newEntry = new Entry(key, value);
 		int index = function.calcIndex(key);
 		
-		if(table[index]==null){
-			table[index] = newEntry;
-		}else{
-			index = index++ % size;
-			while(table[index]!=null){
+		boolean wordadded = false;
+		while(!wordadded){
+			if(table[index]==null){
+				table[index] = newEntry;
+				wordadded = true;
+				wordCount++;
+			}else{
 				index++;
+				index = index % size;				
 			}
-			table[index]=newEntry;
-		}
-		wordCount++;
+		}	
 		
 	}
 	
@@ -58,11 +59,26 @@ public class LinearProbeTable {
 	}
 	
 	public void resize(){
-		int newSize = 2*size;
-		Entry[] newTable = new Entry[newSize];
-		for(Entry entry : table){
-			
+		System.out.println("Resizing");
+		Entry[] oldTable = new Entry[size];
+		System.arraycopy(table, 0, oldTable, 0, size);
+		size *=2;
+		table = new Entry[size];
+		function.updateHashSize(size);
+		
+		
+		for(Entry e : oldTable){
+			if(e != null){
+				this.put(e.getKey(), e.getValue());
+				//System.out.println(e.getKey());
+			}
 		}
+		
+		
+	}
+	
+	public int getHashSize(){
+		return size;
 	}
 	
 	public int size(){
