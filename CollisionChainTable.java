@@ -1,4 +1,4 @@
-public class CollisionChainTable {
+public class CollisionChainTable implements GenericHashTable{
 	//size is the amount of LinkedLists
 	int size;
 	//wordCount is the total amount of words in the table.

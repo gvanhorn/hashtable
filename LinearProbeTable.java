@@ -1,5 +1,5 @@
 
-public class LinearProbeTable {
+public class LinearProbeTable implements GenericHashTable{
 	int size;
 	int wordCount;
 	double threshold;
@@ -11,7 +11,7 @@ public class LinearProbeTable {
 		function = hashFunction;
 		wordCount = 0;
 		table = new Entry[size];
-		threshold = 0.5;
+		threshold = 0.75;
 	}
 	
 	public void put(String key, String value){
@@ -59,7 +59,7 @@ public class LinearProbeTable {
 	}
 	
 	public void resize(){
-		System.out.println("Resizing");
+		//System.out.println("Resizing");
 		Entry[] oldTable = new Entry[size];
 		System.arraycopy(table, 0, oldTable, 0, size);
 		size *=2;

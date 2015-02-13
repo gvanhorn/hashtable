@@ -5,15 +5,9 @@ class SpellChecker {
 	
     public static void main(String[] args) {
         int init_hash_size;
-        int count = 0, typo = 0;
-        long start = 0, end = 0;
         String wordfile, textfile;
-        //Hashtable<String, String> table;
-//        CollisionChainTable table;
-        LinearProbeTable table;
-        /* Shared token to store for every word in the hash table. */
-        String placeholder = "a";
-
+        
+        //parse inputarguments
         if (!(args.length == 3) ) {
             System.out.println("Usage: java SpellChecker <wordfile> <text> <size>");
             System.exit(0);
@@ -22,29 +16,85 @@ class SpellChecker {
         textfile = args[1];
         init_hash_size = Integer.parseInt(args[2]);
         System.out.printf("Selected table size: %d\n", init_hash_size);
-        //table = new Hashtable<String, String>(hash_size);
         
-        Compressable function = new Division(init_hash_size);
-        table = new LinearProbeTable(init_hash_size, function);
+        int hashSize = init_hash_size;
         
-        /* Read wordfile, and insert every word into the hash table. */
+        //Time the LinearProbeTable 10 times, doubling the initial hash_size each time.
         try {
-            BufferedReader in = new BufferedReader(new FileReader(wordfile));
-            start = System.currentTimeMillis();
-            String str, copy;
-            while ((str = in.readLine()) != null) {
-                copy = str.toLowerCase();
-                table.put(copy, placeholder);
-            }
-            //System.out.println(table.toString());
-            end = System.currentTimeMillis();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        	File resultFile = new File("linearProbing_" + init_hash_size);
+        	if(!resultFile.exists()){
+				resultFile.createNewFile();
+			} 
+        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
+        	BufferedWriter bw = new BufferedWriter(fw);
+        	bw.write("HashSize, Typo's, wordCount, runningTime");
+        	
+	        for(int i = 1; i<= 10; i++){
+	        	System.out.println(i);
+	        	
+		        //Create linearProbeTable and fill it.
+		        GenericHashTable table;
+		        Compressable function = new Division(hashSize);
+		        table = new LinearProbeTable(hashSize, function);
+		        table = fillHashTable(wordfile, table);
+		
+		        // Read text file, and lookup every word in the hash table.
+		        long[] results = checkForErrors(textfile, table);
+		        
+		        bw.write(hashSize + ", " + results[0]+ ", " + results[1] + ", " +  results[2] + "\n");
+		        hashSize *= 2;
+	        }
+	        bw.close();
         }
-        System.out.println("java opbouwen Hashtable in " + (end - start) + " ms");
+        catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        
+//        System.out.printf("Hash table contains %d words\n", table.getWordCount());
+//        System.out.printf("Hash table load factor %f\n",
+//               (double)table.getWordCount()/table.getHashSize());
+//
+//        System.out.printf("Text contains %d words\n", results[1]);
+//        System.out.printf("typo's %d\n", results[0]);
+//
+//        System.out.println("zoeken woorden in " + results[2] + " ms");
+    }
+    /* Checks if word contains digits. So it can be ignored for spell
+     * checking. */
+    static boolean contains_numbers(String str) {
+        for (int i = 0 ; i < str.length() ; i++) 
+            if (str.charAt(i) >= '0' && str.charAt(i) <= '9') 
+                return true;
 
-        // Read text file, and lookup every word in the hash table.
+        return false;
+    }
+    
+    public static GenericHashTable fillHashTable(String wordfile, GenericHashTable table){
+    	String placeholder = "a";
+    	long start =0, end = 0;
+    	
+	    try {
+	        BufferedReader in = new BufferedReader(new FileReader(wordfile));
+	        start = System.currentTimeMillis();
+	        String str, copy;
+	        while ((str = in.readLine()) != null) {
+	            copy = str.toLowerCase();
+	            table.put(copy, placeholder);
+	        }
+	        //System.out.println(table.toString());
+	        end = System.currentTimeMillis();
+	        in.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    System.out.println("java opbouwen Hashtable in " + (end - start) + " ms");
+	    return table;
+    }
+    
+    public static long[] checkForErrors(String textfile, GenericHashTable table){
+    	long start = 0, end = 0;
+    	long typo = 0, count = 0;
         try {
             BufferedReader src = new BufferedReader(new FileReader(textfile));
             start = System.currentTimeMillis();
@@ -68,47 +118,15 @@ class SpellChecker {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        long runningTime = end-start;
+        
+        long[] returnValue = new long[3];
+        returnValue[0] = typo;
+        returnValue[1] = count;
+        returnValue[2] = runningTime;
+        return returnValue;
 
-        System.out.printf("Hash table contains %d words\n", table.wordCount);
-        System.out.printf("Hash table load factor %f\n",
-               (double)table.getWordCount()/table.getHashSize());
-
-        System.out.printf("Text contains %d words\n", count);
-        System.out.printf("typo's %d\n", typo);
-
-        System.out.println("zoeken woorden in " + (end - start) + " ms");
     }
-    /* Checks if word contains digits. So it can be ignored for spell
-     * checking. */
-    static boolean contains_numbers(String str) {
-        for (int i = 0 ; i < str.length() ; i++) 
-            if (str.charAt(i) >= '0' && str.charAt(i) <= '9') 
-                return true;
-
-        return false;
-    }
-    
-//    public Compressable makeCompressable(String compressType, int hashSize){
-//    	Compressable function;
-//    	
-//    	switch(compressType){
-//    		case "Division":
-//    			function = new Division(hashSize);
-//    			break;
-//    		default:
-//    			System.out.println("Unkown compression type");
-//    	}
-//    	
-//    	return function;
-//    }
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 }
