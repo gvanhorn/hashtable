@@ -2,6 +2,7 @@
 public class LinearProbeTable implements GenericHashTable{
 	int size;
 	int wordCount;
+	int resizeCount;
 	double threshold;
 	Compressable function;
 	Entry[] table;
@@ -9,6 +10,7 @@ public class LinearProbeTable implements GenericHashTable{
 	LinearProbeTable(int hashSize, Compressable hashFunction){
 		size = hashSize;
 		function = hashFunction;
+		resizeCount = 0;
 		wordCount = 0;
 		table = new Entry[size];
 		threshold = 0.75;
@@ -60,6 +62,7 @@ public class LinearProbeTable implements GenericHashTable{
 	
 	public void resize(){
 		//System.out.println("Resizing");
+		resizeCount++;
 		Entry[] oldTable = new Entry[size];
 		System.arraycopy(table, 0, oldTable, 0, size);
 		size *=2;
@@ -75,6 +78,10 @@ public class LinearProbeTable implements GenericHashTable{
 		}
 		
 		
+	}
+	
+	public int getResizeCount(){
+		return resizeCount;
 	}
 	
 	public int getHashSize(){

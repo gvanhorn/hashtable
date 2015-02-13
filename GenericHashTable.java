@@ -4,4 +4,5 @@ public interface GenericHashTable {
 	String get(String key);
 	int getWordCount();
 	int getHashSize();
+	int getResizeCount();
 }

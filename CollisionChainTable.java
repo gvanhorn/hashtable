@@ -47,6 +47,10 @@ public class CollisionChainTable implements GenericHashTable{
 		return wordCount;
 	}
 	
+	public int getResizeCount() {
+		return 0;
+	}
+	
 
 }
 
