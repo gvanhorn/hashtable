@@ -21,41 +21,41 @@ class SpellChecker {
         long start =0, end = 0;
         double loadFactor = 0;
         //Time the LinearProbeTable 10 times, doubling the initial hash_size each time.
-        try {
-        	File resultFile = new File("linearProbing_" + init_hash_size);
-        	if(!resultFile.exists()){
-				resultFile.createNewFile();
-			} 
-        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
-        	BufferedWriter bw = new BufferedWriter(fw);
-        	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount \n");
-        	
-	        for(int i = 1; i<= 10; i++){
-	        	System.out.println(i);
-	        	
-		        //Create linearProbeTable and fill it.
-		        GenericHashTable table;
-		        Compressable function = new Division(hashSize);
-		        table = new LinearProbeTable(hashSize, function);
-		        
-		        start = System.currentTimeMillis();
-		        table = fillHashTable(wordfile, table);
-		        end = System.currentTimeMillis();
-		        long fillTime = end-start;
-		        
-		        // Read text file, and lookup every word in the hash table.
-		        long[] results = checkForErrors(textfile, table);
-		        loadFactor = table.getWordCount()/table.getHashSize();
-		        
-		        System.out.println("java opbouwen Hashtable in " + fillTime + " ms");
-		        bw.write(hashSize + ", " + fillTime + ", " + results[2] +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
-		        hashSize *= 2;
-	        }
-	        bw.close();
-        }
-        catch (IOException e) {
-			e.printStackTrace();
-		}
+//        try {
+//        	File resultFile = new File("linearProbing_" + init_hash_size);
+//        	if(!resultFile.exists()){
+//				resultFile.createNewFile();
+//			} 
+//        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
+//        	BufferedWriter bw = new BufferedWriter(fw);
+//        	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount \n");
+//        	
+//	        for(int i = 1; i<= 10; i++){
+//	        	System.out.println(i);
+//	        	
+//		        //Create linearProbeTable and fill it.
+//		        GenericHashTable table;
+//		        Compressable function = new Division(hashSize);
+//		        table = new LinearProbeTable(hashSize, function);
+//		        
+//		        start = System.currentTimeMillis();
+//		        table = fillHashTable(wordfile, table);
+//		        end = System.currentTimeMillis();
+//		        long fillTime = end-start;
+//		        
+//		        // Read text file, and lookup every word in the hash table.
+//		        long[] results = checkForErrors(textfile, table);
+//		        loadFactor = table.getWordCount()/table.getHashSize();
+//		        
+//		        System.out.println("java opbouwen Hashtable in " + fillTime + " ms");
+//		        bw.write(hashSize + ", " + fillTime + ", " + results[2] +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
+//		        hashSize *= 2;
+//	        }
+//	        bw.close();
+//        }
+//        catch (IOException e) {
+//			e.printStackTrace();
+//		}
         
         
         
