@@ -15,52 +15,15 @@ class SpellChecker {
         wordfile = args[0];
         textfile = args[1];
         init_hash_size = Integer.parseInt(args[2]);
-        System.out.printf("Selected table size: %d\n", init_hash_size);
+        //System.out.printf("Selected table size: %d\n", init_hash_size);
         
         int hashSize = init_hash_size;
         long start =0, end = 0;
         double loadFactor = 0;
-        //Time the LinearProbeTable 10 times, doubling the initial hash_size each time.
-//        try {
-//        	File resultFile = new File("linearProbing_" + init_hash_size);
-//        	if(!resultFile.exists()){
-//				resultFile.createNewFile();
-//			} 
-//        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
-//        	BufferedWriter bw = new BufferedWriter(fw);
-//        	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount \n");
-//        	
-//	        for(int i = 1; i<= 10; i++){
-//	        	System.out.println(i);
-//	        	
-//		        //Create linearProbeTable and fill it.
-//		        GenericHashTable table;
-//		        Compressable function = new Division(hashSize);
-//		        table = new LinearProbeTable(hashSize, function);
-//		        
-//		        start = System.currentTimeMillis();
-//		        table = fillHashTable(wordfile, table);
-//		        end = System.currentTimeMillis();
-//		        long fillTime = end-start;
-//		        
-//		        // Read text file, and lookup every word in the hash table.
-//		        long[] results = checkForErrors(textfile, table);
-//		        loadFactor = table.getWordCount()/table.getHashSize();
-//		        
-//		        System.out.println("java opbouwen Hashtable in " + fillTime + " ms");
-//		        bw.write(hashSize + ", " + fillTime + ", " + results[2] +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
-//		        hashSize *= 2;
-//	        }
-//	        bw.close();
-//        }
-//        catch (IOException e) {
-//			e.printStackTrace();
-//		}
-        
         
         
         try {
-        	File resultFile = new File("collisionChaining" + init_hash_size);
+        	File resultFile = new File("linearProbing" + init_hash_size);
         	if(!resultFile.exists()){
 				resultFile.createNewFile();
 			} 
@@ -68,26 +31,32 @@ class SpellChecker {
         	BufferedWriter bw = new BufferedWriter(fw);
         	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount\n");
         	
-	        for(int i = 1; i<= 10; i++){
-	        	System.out.println(i);
+	        for(int i = 1; i<= 11; i++){
+	        	System.out.println("Currently testing LinearProbeTable with size: " + hashSize);
 	        	
-		        //Create linearProbeTable and fill it.
+		        //Create CollisionChainTable and fill it.
 		        GenericHashTable table;
 		        Compressable function = new Division(hashSize);
-		        table = new CollisionChainTable(hashSize, function);
+		        table = new LinearProbeTable(hashSize, function);
 		        
+		        //Fill the table and time operation
 		        start = System.currentTimeMillis();
 		        table = fillHashTable(wordfile, table);
 		        end = System.currentTimeMillis();
 		        long fillTime = end-start;
+		        System.out.println("built Hashtable in " + fillTime + " ms");
 		        
 		        // Read text file, and lookup every word in the hash table.
-		        long[] results = checkForErrors(textfile, table);
-		        loadFactor = table.getWordCount()/table.getHashSize();
+		        start = System.currentTimeMillis();
+		        int[] results = checkForErrors(textfile, table);
+		        end = System.currentTimeMillis();
+		        long checkTime = end-start;
+		        System.out.println("checked for errors in textfile in: " + checkTime + " ms, found " + results[0]+ " errors");
+		        loadFactor = (double)table.getWordCount()/table.getHashSize();
 		        
-		        System.out.println("java opbouwen Hashtable in " + fillTime + " ms");
-		        bw.write(hashSize + ", " + fillTime + ", " + results[2] +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
-		        hashSize *= 2;
+		        
+		        bw.write(hashSize + ", " + fillTime + ", " + checkTime +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
+		        hashSize = hashSize + 100000;
 	        }
 	        bw.close();
         }
@@ -96,14 +65,48 @@ class SpellChecker {
 		}
         
         
-//        System.out.printf("Hash table contains %d words\n", table.getWordCount());
-//        System.out.printf("Hash table load factor %f\n",
-//               (double)table.getWordCount()/table.getHashSize());
-//
-//        System.out.printf("Text contains %d words\n", results[1]);
-//        System.out.printf("typo's %d\n", results[0]);
-//
-//        System.out.println("zoeken woorden in " + results[2] + " ms");
+        
+//        try {
+//        	File resultFile = new File("collisionChaining" + init_hash_size);
+//        	if(!resultFile.exists()){
+//				resultFile.createNewFile();
+//			} 
+//        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
+//        	BufferedWriter bw = new BufferedWriter(fw);
+//        	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount\n");
+//        	
+//	        for(int i = 1; i<= 11; i++){
+//	        	System.out.println("Currently testing CollisionChainTable with size: " + hashSize);
+//	        	
+//		        //Create CollisionChainTable and fill it.
+//		        GenericHashTable table;
+//		        Compressable function = new Division(hashSize);
+//		        table = new CollisionChainTable(hashSize, function);
+//		        
+//		        //Fill the table and time operation
+//		        start = System.currentTimeMillis();
+//		        table = fillHashTable(wordfile, table);
+//		        end = System.currentTimeMillis();
+//		        long fillTime = end-start;
+//		        System.out.println("built Hashtable in " + fillTime + " ms");
+//		        
+//		        // Read text file, and lookup every word in the hash table.
+//		        start = System.currentTimeMillis();
+//		        int[] results = checkForErrors(textfile, table);
+//		        end = System.currentTimeMillis();
+//		        long checkTime = end-start;
+//		        System.out.println("checked for errors in textfile in: " + checkTime + " ms, found " + results[0]+ " errors");
+//		        loadFactor = (double)table.getWordCount()/table.getHashSize();
+//		        
+//		        
+//		        bw.write(hashSize + ", " + fillTime + ", " + checkTime +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
+//		        hashSize = hashSize + 100000;
+//	        }
+//	        bw.close();
+//        }
+//        catch (IOException e) {
+//			e.printStackTrace();
+//		}
     }
     /* Checks if word contains digits. So it can be ignored for spell
      * checking. */
@@ -137,12 +140,12 @@ class SpellChecker {
 	    return table;
     }
     
-    public static long[] checkForErrors(String textfile, GenericHashTable table){
-    	long start = 0, end = 0;
-    	long typo = 0, count = 0;
+    public static int[] checkForErrors(String textfile, GenericHashTable table){
+    	
+    	int typo = 0, count = 0;
         try {
             BufferedReader src = new BufferedReader(new FileReader(textfile));
-            start = System.currentTimeMillis();
+            
             String str = src.readLine();
             while (str != null) {
                 String copy = str.toLowerCase();
@@ -159,16 +162,16 @@ class SpellChecker {
                 str = src.readLine();
             }
             src.close();
-            end = System.currentTimeMillis();
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-        long runningTime = end-start;
         
-        long[] returnValue = new long[3];
+        
+        int[] returnValue = new int[2];
         returnValue[0] = typo;
         returnValue[1] = count;
-        returnValue[2] = runningTime;
+        
         return returnValue;
 
     }
