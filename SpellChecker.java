@@ -23,7 +23,7 @@ class SpellChecker {
         
         
         try {
-        	File resultFile = new File("linearProbing" + init_hash_size);
+        	File resultFile = new File("linearProbing_09threshold" + init_hash_size);
         	if(!resultFile.exists()){
 				resultFile.createNewFile();
 			} 

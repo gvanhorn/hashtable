@@ -13,7 +13,7 @@ public class LinearProbeTable implements GenericHashTable{
 		resizeCount = 0;
 		wordCount = 0;
 		table = new Entry[size];
-		threshold = 0.75;
+		threshold = 0.9;
 	}
 	
 	public void put(String key, String value){
