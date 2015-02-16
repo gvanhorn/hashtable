@@ -31,7 +31,7 @@ class SpellChecker {
         	BufferedWriter bw = new BufferedWriter(fw);
         	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount\n");
         	
-	        for(int i = 1; i<= 11; i++){
+	        for(int i = 1; i<= 20; i++){
 	        	System.out.println("Currently testing LinearProbeTable with size: " + hashSize);
 	        	
 		        //Create CollisionChainTable and fill it.
@@ -57,7 +57,7 @@ class SpellChecker {
 		        
 		        
 		        bw.write(hashSize + ", " + fillTime + ", " + checkTime +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
-		        hashSize *= 2;
+		        hashSize = hashSize + 25000;
 	        }
 	        bw.close();
         }
