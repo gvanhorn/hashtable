@@ -1,3 +1,8 @@
+/*
+ * Gijs van Horn 10070370
+ * Jeroen Vranken 10658491
+ * Assignment 2
+ */
 public class CollisionChainTable implements GenericHashTable{
 	//size is the amount of LinkedLists
 	int size;

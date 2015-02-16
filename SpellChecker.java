@@ -1,3 +1,9 @@
+/*
+ * Gijs van Horn 10070370
+ * Jeroen Vranken 10658491
+ * Assignment 2
+ */
+
 import java.util.*;
 import java.io.*;
 class SpellChecker {
@@ -7,7 +13,7 @@ class SpellChecker {
         int init_hash_size;
         String wordfile, textfile;
         
-        //parse inputarguments
+        //parse input arguments
         if (!(args.length == 3) ) {
             System.out.println("Usage: java SpellChecker <wordfile> <text> <size>");
             System.exit(0);
@@ -67,48 +73,49 @@ class SpellChecker {
         
         
         
-//        try {
-//        	File resultFile = new File("collisionChaining" + init_hash_size);
-//        	if(!resultFile.exists()){
-//				resultFile.createNewFile();
-//			} 
-//        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
-//        	BufferedWriter bw = new BufferedWriter(fw);
-//        	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount\n");
-//        	
-//	        for(int i = 1; i<= 10; i++){
-//	        	System.out.println("Currently testing CollisionChainTable with size: " + hashSize);
-//	        	
-//		        //Create CollisionChainTable and fill it.
-//		        GenericHashTable table;
-//		        Compressable function = new Division(hashSize);
-//		        table = new CollisionChainTable(hashSize, function);
-//		        
-//		        //Fill the table and time operation
-//		        start = System.currentTimeMillis();
-//		        table = fillHashTable(wordfile, table);
-//		        end = System.currentTimeMillis();
-//		        long fillTime = end-start;
-//		        System.out.println("built Hashtable in " + fillTime + " ms");
-//		        
-//		        // Read text file, and lookup every word in the hash table.
-//		        start = System.currentTimeMillis();
-//		        int[] results = checkForErrors(textfile, table);
-//		        end = System.currentTimeMillis();
-//		        long checkTime = end-start;
-//		        System.out.println("checked for errors in textfile in: " + checkTime + " ms, found " + results[0]+ " errors");
-//		        loadFactor = (double)table.getWordCount()/table.getHashSize();
-//		        
-//		        
-//		        bw.write(hashSize + ", " + fillTime + ", " + checkTime +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
-//		        hashSize *= 2;
-//	        }
-//	        bw.close();
-//        }
-//        catch (IOException e) {
-//			e.printStackTrace();
-//		}
+        try {
+        	File resultFile = new File("collisionChaining" + init_hash_size);
+        	if(!resultFile.exists()){
+				resultFile.createNewFile();
+			} 
+        	FileWriter fw = new FileWriter(resultFile.getAbsoluteFile());
+        	BufferedWriter bw = new BufferedWriter(fw);
+        	bw.write("HashSize, fillTime, checkTime, loadFactor, resizeCount\n");
+        	
+	        for(int i = 1; i<= 10; i++){
+	        	System.out.println("Currently testing CollisionChainTable with size: " + hashSize);
+	        	
+		        //Create CollisionChainTable and fill it.
+		        GenericHashTable table;
+		        Compressable function = new Division(hashSize);
+		        table = new CollisionChainTable(hashSize, function);
+		        
+		        //Fill the table and time operation
+		        start = System.currentTimeMillis();
+		        table = fillHashTable(wordfile, table);
+		        end = System.currentTimeMillis();
+		        long fillTime = end-start;
+		        System.out.println("built Hashtable in " + fillTime + " ms");
+		        
+		        // Read text file, and lookup every word in the hash table.
+		        start = System.currentTimeMillis();
+		        int[] results = checkForErrors(textfile, table);
+		        end = System.currentTimeMillis();
+		        long checkTime = end-start;
+		        System.out.println("checked for errors in textfile in: " + checkTime + " ms, found " + results[0]+ " errors");
+		        loadFactor = (double)table.getWordCount()/table.getHashSize();
+		        
+		        
+		        bw.write(hashSize + ", " + fillTime + ", " + checkTime +", " + loadFactor + ", " + table.getResizeCount() +  "\n");
+		        hashSize *= 2;
+	        }
+	        bw.close();
+        }
+        catch (IOException e) {
+			e.printStackTrace();
+		}
     }
+    
     /* Checks if word contains digits. So it can be ignored for spell
      * checking. */
     static boolean contains_numbers(String str) {

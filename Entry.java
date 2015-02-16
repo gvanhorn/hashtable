@@ -1,3 +1,8 @@
+/*
+ * Gijs van Horn 10070370
+ * Jeroen Vranken 10658491
+ * Assignment 2
+ */
 
 //Class entry is a key-value pair object.
 public class Entry{
