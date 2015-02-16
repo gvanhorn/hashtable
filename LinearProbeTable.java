@@ -17,7 +17,8 @@ public class LinearProbeTable implements GenericHashTable{
 	}
 	
 	public void put(String key, String value){
-		if((wordCount++ / size ) > threshold){
+		if(((double)wordCount++ / size ) > threshold){
+			//System.out.println((double)wordCount++/size);
 			resize();
 		}
 		
